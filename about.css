@@ -1,0 +1,334 @@
+/* ============================================
+       THE CRICKET ROOM - ABOUT US PAGE STYLES
+       ============================================ */
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+    }
+
+    /* Header & Navigation */
+    .header {
+      background: linear-gradient(135deg, #1a472a 0%, #0e2a1a 100%);
+      color: white;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .nav-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo h1 {
+      font-size: 1.8rem;
+      letter-spacing: -0.5px;
+    }
+
+    .logo p {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.3s;
+    }
+
+    .nav-links a:hover {
+      opacity: 0.8;
+    }
+
+    .nav-links a.active {
+      font-weight: 700;
+      border-bottom: 2px solid #ff6b35;
+    }
+
+    .cart-icon {
+      background: #ff6b35;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .cart-icon:hover {
+      transform: scale(1.05);
+    }
+
+    /* Page Header */
+    .page-header {
+      background: linear-gradient(135deg, #1e3a2f 0%, #2c4a3a 100%);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .page-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    /* About Content */
+    .about-container {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    /* Student Info Card */
+    .student-info-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      margin-bottom: 3rem;
+      transition: transform 0.3s;
+    }
+
+    .student-info-header {
+      background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
+      padding: 1.5rem;
+      color: white;
+    }
+
+    .student-info-header h2 {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .student-info-header h2 i {
+      font-size: 1.8rem;
+    }
+
+    .student-details {
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 12px;
+      transition: all 0.3s;
+    }
+
+    .detail-item:hover {
+      transform: translateX(5px);
+      background: #f1f5f9;
+    }
+
+    .detail-icon {
+      width: 50px;
+      height: 50px;
+      background: #e6f7ec;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1a472a;
+      font-size: 1.5rem;
+    }
+
+    .detail-content h3 {
+      font-size: 0.85rem;
+      color: #64748b;
+      margin-bottom: 0.3rem;
+      font-weight: 500;
+    }
+
+    .detail-content p {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    /* About Us Story */
+    .story-section {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .story-section h2 {
+      font-size: 1.8rem;
+      color: #1a472a;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .story-section h2 i {
+      color: #ff6b35;
+    }
+
+    .story-text {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #334155;
+      margin-bottom: 1.5rem;
+    }
+
+    .mission-vision {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .mission-card, .vision-card {
+      background: #f8fafc;
+      padding: 1.5rem;
+      border-radius: 16px;
+      border-left: 4px solid #ff6b35;
+    }
+
+    .mission-card h3, .vision-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: #1a472a;
+    }
+
+    .mission-card p, .vision-card p {
+      color: #475569;
+      line-height: 1.6;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    .contact-section h2 {
+      font-size: 1.8rem;
+      color: #1a472a;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+    }
+
+    .contact-section p {
+      color: #475569;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    .email-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: linear-gradient(135deg, #1a472a 0%, #0e2a1a 100%);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(26, 71, 42, 0.3);
+    }
+
+    .email-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(26, 71, 42, 0.4);
+      background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
+    }
+
+    .email-button i {
+      font-size: 1.2rem;
+    }
+
+    .feedback-note {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #fef3e8;
+      border-radius: 12px;
+      color: #ff6b35;
+      font-size: 0.9rem;
+    }
+
+    /* Footer */
+    .footer {
+      background: #0e2a1a;
+      color: #ccc;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 4rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-container {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .page-header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .student-details {
+        grid-template-columns: 1fr;
+      }
+      
+      .story-section {
+        padding: 1.5rem;
+      }
+      
+      .contact-section {
+        padding: 1.5rem;
+      }
+      
+      .email-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+      }
+    }

@@ -1,0 +1,287 @@
+<!--Login Page-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>The Cricket Room | Login</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/style.css" type="text/css">
+</head>
+
+<body>
+    <!-- Header / Navigation -->
+  <header class="header">
+    <div class="nav-container">
+      <div class="logo">
+        <h1>The Cricket Room</h1>
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="aboutUs.html" class="active">About Us</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+        <a href="cart.html">Cart</a>
+        <a href="checkout.html">Checkout</a>
+        <div class="cart-icon" id="cartIcon">
+          Cart <span id="cartCount">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  
+<div class="login-container">
+  <div class="login-card">
+
+    <div class="brand">
+      <div class="brand-icon">
+        <i class="fas fa-lock"></i>
+      </div>
+      <h1>Welcome back</h1>
+      <p>Sign in to your account</p>
+    </div>
+
+    <form id="loginForm">
+      
+      <!-- USERNAME -->
+      <div class="input-group">
+        <div class="input-label">
+          <i class="fas fa-user-circle"></i>
+          <span>Username or email</span>
+        </div>
+        <input type="text" id="username" class="input-field"
+          placeholder="e.g., johndoe or john@example.com"
+          autocomplete="username" required>
+      </div>
+
+      <!-- PASSWORD -->
+      <div class="input-group">
+        <div class="input-label">
+          <i class="fas fa-key"></i>
+          <span>Password</span>
+        </div>
+        <div class="password-wrapper">
+          <input type="password" id="password" class="input-field"
+            placeholder="••••••••"
+            autocomplete="current-password" required>
+
+          <button type="button" id="togglePasswordBtn" class="toggle-password">
+            <i class="fas fa-eye-slash"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- OPTIONS -->
+      <div class="options-row">
+        <label class="checkbox-label">
+          <input type="checkbox" id="rememberCheckbox"> 
+          <span>Remember me</span>
+        </label>
+
+        <a href="#" id="forgotPasswordLink" class="forgot-link">
+          Forgot password?
+        </a>
+      </div>
+
+      <!-- LOGIN BUTTON -->
+      <button type="submit" class="login-btn" id="loginButton" >
+        <i class="fas fa-arrow-right-to-bracket"></i> Log in
+      </button>
+
+      <div style="text-align:center; margin-top: 1rem;">
+        <span>Don't have an account? </span>
+        <a href="register.html" style="color: #2563eb; text-decoration: none; font-weight: 600;">Register Now</a>
+      </div>
+
+      <!-- MESSAGE BOX -->
+      <div id="messageBox" class="message-area">
+        <i class="fas fa-info-circle"></i> 
+        <span id="messageText">Enter your credentials</span>
+      </div>
+
+    </form>
+
+    <hr />
+
+    <div style="text-align:center; font-size:0.7rem; margin-top:0.6rem; color:#6c757d;">
+      <i class="fas fa-shield-alt"></i> Secure login 
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function() {
+
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const loginForm = document.getElementById('loginForm');
+  const messageBox = document.getElementById('messageBox');
+  const messageTextSpan = document.getElementById('messageText');
+  const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+  const rememberCheckbox = document.getElementById('rememberCheckbox');
+  const forgotLink = document.getElementById('forgotPasswordLink');
+
+  function showMessage(message, type = 'info') {
+    messageTextSpan.innerText = message;
+    messageBox.classList.remove('error', 'success');
+
+    if (type === 'error') {
+      messageBox.classList.add('error');
+    } else if (type === 'success') {
+      messageBox.classList.add('success');
+    } else {
+      messageBox.style.background = "#f8fafc";
+      messageBox.style.borderLeftColor = "#94a3b8";
+    }
+  }
+
+  function resetInputStyles() {
+    usernameInput.style.borderColor = "";
+    usernameInput.style.boxShadow = "";
+    passwordInput.style.borderColor = "";
+    passwordInput.style.boxShadow = "";
+  }
+
+  function highlightInvalidField(field) {
+    field.style.borderColor = "#dc2626";
+    field.style.boxShadow = "0 0 0 2px rgba(220,38,38,0.2)";
+    setTimeout(() => {
+      if (document.activeElement !== field) {
+        field.style.borderColor = "";
+        field.style.boxShadow = "";
+      }
+    }, 2000);
+  }
+
+  function validateCredentials(username, password) {
+    const user = username.trim();
+    const pass = password.trim();
+
+    if ((user === "demo@login.com" || user === "demo") && pass === "password123") {
+      return true;
+    }
+    if (user === "admin" && pass === "admin123") return true;
+    if (user === "demo" && pass === "demo") return true;
+
+    return false;
+  }
+
+  function performLogin(e) {
+    e.preventDefault();
+    resetInputStyles();
+
+    const username = usernameInput.value;
+    const password = passwordInput.value;
+
+    if (!username.trim()) {
+      showMessage("Please enter your username or email.", "error");
+      highlightInvalidField(usernameInput);
+      usernameInput.focus();
+      return;
+    }
+
+    if (!password.trim()) {
+      showMessage("Please enter your password.", "error");
+      highlightInvalidField(passwordInput);
+      passwordInput.focus();
+      return;
+    }
+
+    if (validateCredentials(username, password)) {
+
+      showMessage(`Welcome, ${username.trim()}! Redirecting to products...`, "success");
+
+      if (rememberCheckbox.checked) {
+        localStorage.setItem('rememberedUser', username.trim());
+      } else {
+        localStorage.removeItem('rememberedUser');
+      }
+      
+      // Set login flag in localStorage
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('loggedInUser', username.trim());
+
+      const btn = document.getElementById('loginButton');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Signing in...';
+    
+      // ACTUAL REDIRECT to products page
+      setTimeout(() => {
+        window.location.href = 'products.html';
+      }, 1000);
+
+    } else {
+      showMessage("Invalid credentials. Try demo / password123 or admin / admin123", "error");
+
+      passwordInput.value = "";
+
+      highlightInvalidField(usernameInput);
+      highlightInvalidField(passwordInput);
+
+      const card = document.querySelector('.login-card');
+
+      card.style.transform = 'translateX(4px)';
+      setTimeout(() => {
+        card.style.transform = 'translateX(-4px)';
+      }, 100);
+
+      setTimeout(() => {
+        card.style.transform = '';
+      }, 200);
+    }
+  }
+
+  function togglePasswordVisibility() {
+    const type = passwordInput.type === 'password' ? 'text' : 'password';
+    passwordInput.type = type;
+
+    const icon = togglePasswordBtn.querySelector('i');
+    icon.classList.toggle('fa-eye');
+    icon.classList.toggle('fa-eye-slash');
+  }
+
+  function handleForgotPassword(e) {
+    e.preventDefault();
+    showMessage("Reset link would be sent to your email (demo)", "info");
+  }
+
+  function loadRememberedUser() {
+    const remembered = localStorage.getItem('rememberedUser');
+    if (remembered) {
+      usernameInput.value = remembered;
+      rememberCheckbox.checked = true;
+      showMessage(`Welcome back, ${remembered}`, "info");
+    }
+  }
+
+  // Update cart count in header
+  function updateCartDisplay() {
+    const cartCountSpan = document.getElementById('cartCount');
+    if (cartCountSpan) {
+      const cartCount = localStorage.getItem('cartCount') ? parseInt(localStorage.getItem('cartCount')) : 0;
+      cartCountSpan.textContent = cartCount;
+    }
+  }
+
+  // EVENTS
+  loginForm.addEventListener('submit', performLogin);
+  togglePasswordBtn.addEventListener('click', togglePasswordVisibility);
+  forgotLink.addEventListener('click', handleForgotPassword);
+
+  usernameInput.addEventListener('blur', () => {
+    usernameInput.value = usernameInput.value.trim();
+  });
+
+  loadRememberedUser();
+  updateCartDisplay();
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Cricket Room | All Cricket Equipment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="/style.css" type="text/css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="nav-container">
+      <div class="logo">
+        <h1>The Cricket Room</h1>
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="aboutUs.html" class="active">About Us</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+        <a href="cart.html">Cart</a>
+        <a href="checkout.html">Checkout</a>
+        <div class="cart-icon" id="cartIcon">
+          Cart <span id="cartCount">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1>Complete Cricket Equipment</h1>
+    <p>Professional-grade gear for batsmen, wicketkeepers, and fielders — everything you need to play safe and perform at your best</p>
+  </div>
+
+  <!-- Filters & Search -->
+  <div class="filters-bar">
+    <div class="filter-group">
+      <select id="categoryFilter" class="filter-select">
+        <option value="all">All Categories</option>
+        <option value="bat">Cricket Bats (5)</option>
+        <option value="protective">Protective Gear (10)</option>
+        <option value="footwear">Cricket Footwear (3)</option>
+        <option value="apparel">Cricket Apparel (3)</option>
+        <option value="accessories">Cricket Accessories (7)</option>
+      </select>
+      <select id="sortFilter" class="filter-select">
+        <option value="default">Sort by: Featured</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="name-asc">Name: A to Z</option>
+      </select>
+    </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search bats, helmets, pads, gloves...">
+      <button id="searchBtn"><i class="fas fa-search"></i></button>
+    </div>
+  </div>
+
+  <!-- Products Section -->
+  <main class="products-section">
+    <div class="products-count" id="productsCount"></div>
+    <div class="products-grid" id="productsGrid"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>🏏 The Cricket Room — Fueling every cricketer's dream since 2024</p>
+    <p style="margin-top: 0.8rem; font-size: 0.85rem;">📍 Professional cricket equipment | ECB approved gear | #PlayWithPride</p>
+    <p style="margin-top: 1rem; font-size: 0.75rem;">© 2025 The Cricket Room. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // ─────────────────────────────────────────────────────────────────────────
+    // REAL CRICKET EQUIPMENT IMAGES
+    // Sourced from Cricket Store Online CDN (cricketstoreonline.com)
+    // These are genuine product/category photos of actual cricket gear
+    // ─────────────────────────────────────────────────────────────────────────
+
+    const IMG_BAT_HERO    = "https://cricketstoreonline.com/cdn/shop/files/player-with-cricket-bats.jpg?v=1719914054&width=400";
+    const IMG_BAT_BLADE   = "https://cricketstoreonline.com/cdn/shop/files/LEGEND_2.0_1-removebg-preview.jpg?v=1746812837&width=400";
+    const IMG_BAT_KW      = "https://cricketstoreonline.com/cdn/shop/files/main_narrow_zelos_2_97229f14-41ac-48d2-b5cd-bc4d597f9951.jpg?v=1745265158&width=400";
+    const IMG_HELMET      = "https://cricketstoreonline.com/cdn/shop/files/SHREY_MATCH_3.0_STEEL_3208_GOLD_1_HD.webp?v=1740692455&width=400";
+    const IMG_PADS        = "https://cricketstoreonline.com/cdn/shop/files/batting-pads__84065.webp?v=1718368696&width=400";
+    const IMG_PADS_2      = "https://cricketstoreonline.com/cdn/shop/files/Screenshot_2025-05-06_050131-removebg-preview.jpg?v=1746522614&width=400";
+    const IMG_GLOVES      = "https://cricketstoreonline.com/cdn/shop/files/Batting_gloves.webp?v=1718368696&width=400";
+    const IMG_WK_PADS     = "https://cricketstoreonline.com/cdn/shop/files/NZ6_3390copy.png?v=1736194779&width=400";
+    const IMG_WK_GLOVES   = "https://cricketstoreonline.com/cdn/shop/files/7_6__30837.1696254840.600.600.jpg?v=1708097062&width=400";
+    const IMG_ABDO        = "https://cricketstoreonline.com/cdn/shop/files/players_abdominal_guard_2023_rt__92304.1684323260.600.600.jpg?v=1708096974&width=400";
+    const IMG_SHOES       = "https://cricketstoreonline.com/cdn/shop/files/shoes-from-sport-expert-brands.jpg?v=1719914054&width=400";
+    const IMG_APPAREL     = "https://cricketstoreonline.com/cdn/shop/files/apparels-form-the-leading-sport-brands.jpg?v=1719914054&width=400";
+    const IMG_BALL        = "https://cricketstoreonline.com/cdn/shop/files/cricket-balls.jpg?v=1719914054&width=400";
+    const IMG_BALL_CLOSE  = "https://cricketstoreonline.com/cdn/shop/files/1__1_-removebg-preview_4.jpg?v=1729010799&width=400";
+    const IMG_STUMPS      = "https://cricketstoreonline.com/cdn/shop/files/3T296105prostumps28__39367.1551846099.400.400.png?v=1708087993&width=400";
+    const IMG_BAG         = "https://cricketstoreonline.com/cdn/shop/files/cricket_bags.webp?v=1718368695&width=400";
+    const IMG_ACCESSORIES = "https://cricketstoreonline.com/cdn/shop/files/CSO_ACCESSORIES_Category_Page_Main_Banner_copy_2.jpg?v=1733226657&width=400";
+
+    // Fallback for any broken image
+    const FALLBACK = "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=400&h=250&fit=crop";
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // PRODUCT DATA — 28 ITEMS
+    // ─────────────────────────────────────────────────────────────────────────
+    const products = [
+      // ===== BATS (5) =====
+      { id: 1,  name: "SG Players Edition Cricket Bat",          category: "bat",         price: 5499, rating: 4.8, image: IMG_BAT_HERO,    badge: "Best Seller", description: "Grade 1 English Willow, light pick-up, perfect for aggressive strokeplay and powerful drives" },
+      { id: 2,  name: "Batting Pads",                  category: "bat",         price: 7999, rating: 4.9, image: IMG_BAT_BLADE,   badge: "Premium",     description: "Pro-grade English Willow, massive sweet spot, used by international players for maximum power" },
+      { id: 3,  name: "Kashmir Willow Cricket Bat",              category: "bat",         price: 2999, rating: 4.3, image: IMG_BAT_KW,      badge: "Budget",      description: "Durable Kashmir willow bat, ideal for beginners and practice sessions, great value" },
+      { id: 4,  name: "NB Premium Cricket Pads",                  category: "bat",         price: 6499, rating: 4.8, image: IMG_BAT_BLADE,   badge: "",            description: "Hand-crafted English Willow, excellent balance and power, perfect for club cricketers" },
+     
+      // ===== PROTECTIVE GEAR (10) =====
+      { id: 7,  name: "Premium Cricket Helmet with Steel Grille",category: "protective",  price: 3599, rating: 4.8, image: IMG_HELMET,      badge: "New",         description: "Premium helmet with steel grille, adjustable fit, certified protection for batsmen" },
+      { id: 8,  name: "SS Pro Batting Pads",                     category: "protective",  price: 2199, rating: 4.5, image: IMG_PADS,        badge: "",            description: "High-density foam batting pads, calf protection, comfort straps for secure fit" },
+      { id: 9,  name: "GM Original Cricket Gloves",              category: "protective",  price: 1799, rating: 4.7, image: IMG_GLOVES,      badge: "",            description: "Premium leather batting gloves, extra finger protection, breathable mesh for comfort" },
+      { id: 10, name: "Wicketkeeping Gloves",                    category: "protective",  price: 2499, rating: 4.7, image: IMG_WK_GLOVES,   badge: "",            description: "Premium wicketkeeping gloves, webbed thumb, finger protection, excellent grip for keepers" },
+      { id: 14, name: "Cricket Seed Guard",                       category: "protective",  price: 799,  rating: 4.3, image: IMG_ABDO,        badge: "",            description: "Lightweight PU arm guard, impact resistant for batsmen facing fast bowlers" },
+     
+      // ===== FOOTWEAR (3) =====
+      { id: 17, name: "Adidas Cricket Shoes",                    category: "footwear",    price: 4599, rating: 4.7, image: IMG_SHOES,       badge: "",            description: "Professional cricket shoes with rubber sole, enhanced cushioning for long innings" },
+      
+      // ===== APPAREL (3) =====
+     { id: 20, name: "Cricket Training Bibs (Set of 10)",       category: "apparel",     price: 899,  rating: 4.2, image: IMG_APPAREL,     badge: "Team Pack",   description: "Set of 10 cricket training bibs, lightweight, breathable mesh for team practice" },
+      { id: 21, name: "Cricket Inner Gloves",                    category: "apparel",     price: 599,  rating: 4.2, image: IMG_GLOVES,      badge: "",            description: "Breathable inner gloves, sweat-absorbent, anti-slip grip for batting" },
+
+      // ===== ACCESSORIES (7) =====
+      { id: 22, name: "Kookaburra Turf Cricket Ball",            category: "accessories", price: 899,  rating: 4.9, image: IMG_BALL,        badge: "Best Seller", description: "Premium leather cricket ball, hand-stitched, perfect swing and durability for matches" },
+      { id: 23, name: "Cricket Practice Balls (6pcs)",           category: "accessories", price: 1299, rating: 4.5, image: IMG_BALL_CLOSE,  badge: "",            description: "Set of 6 practice cricket balls, durable, perfect for net sessions and drills" },
+      { id: 24, name: "Tournament Cricket Stumps Set",           category: "accessories", price: 1299, rating: 4.4, image: IMG_STUMPS,      badge: "",            description: "Spring joint stumps, metal base, includes bails — tournament quality for matches" },
+      { id: 25, name: "Cricket Bails (Set of 6)",                category: "accessories", price: 399,  rating: 4.3, image: IMG_STUMPS,      badge: "",            description: "Professional wooden bails with metal tips, standard size for all stumps" },
+      { id: 26, name: "Wheelie Cricket Kit Bag",                 category: "accessories", price: 3499, rating: 4.8, image: IMG_BAG,         badge: "New",         description: "Wheeled cricket bag, 80L capacity, separate bat compartment for easy transport" },
+     ];
+
+    let cartCount = localStorage.getItem('cartCount') ? parseInt(localStorage.getItem('cartCount')) : 0;
+
+    const productsGrid   = document.getElementById('productsGrid');
+    const productsCount  = document.getElementById('productsCount');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const sortFilter     = document.getElementById('sortFilter');
+    const searchInput    = document.getElementById('searchInput');
+    const searchBtn      = document.getElementById('searchBtn');
+    const cartCountSpan  = document.getElementById('cartCount');
+
+    function updateCartDisplay() {
+      cartCountSpan.textContent = cartCount;
+      localStorage.setItem('cartCount', cartCount);
+    }
+
+    function showToast(productName) {
+      const toast = document.createElement('div');
+      toast.className = 'toast-notification';
+      toast.innerHTML = `<i class="fas fa-check-circle"></i> ${productName} added to cart!`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+
+    function addToCart(productId, productName) {
+      cartCount++;
+      updateCartDisplay();
+      showToast(productName);
+      let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+      cartItems.push({ id: productId, name: productName, addedAt: new Date().toISOString() });
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }
+
+    function renderProducts() {
+      let filteredProducts = [...products];
+
+      const category = categoryFilter.value;
+      if (category !== 'all') filteredProducts = filteredProducts.filter(p => p.category === category);
+
+      const searchTerm = searchInput.value.toLowerCase();
+      if (searchTerm) {
+        filteredProducts = filteredProducts.filter(p =>
+          p.name.toLowerCase().includes(searchTerm) ||
+          p.description.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      const sort = sortFilter.value;
+      if (sort === 'price-asc')       filteredProducts.sort((a, b) => a.price - b.price);
+      else if (sort === 'price-desc') filteredProducts.sort((a, b) => b.price - a.price);
+      else if (sort === 'name-asc')   filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+
+      productsCount.textContent = `Showing ${filteredProducts.length} of ${products.length} premium cricket products`;
+
+      if (filteredProducts.length === 0) {
+        productsGrid.innerHTML = `
+          <div class="no-results">
+            <i class="fas fa-search"></i>
+            <h3>No products found</h3>
+            <p>Try adjusting your search or filter criteria</p>
+          </div>`;
+        return;
+      }
+
+      const categoryLabel = {
+        bat:         '🏏 CRICKET BAT',
+        protective:  '🛡️ PROTECTIVE GEAR',
+        footwear:    '👟 CRICKET SHOES',
+        apparel:     '👕 APPAREL',
+        accessories: '🔧 ACCESSORIES'
+      };
+
+      productsGrid.innerHTML = filteredProducts.map(product => `
+        <div class="product-card" data-id="${product.id}">
+          <div class="product-image-container">
+            <img class="product-image"
+                 src="${product.image}"
+                 alt="${product.name}"
+                 loading="lazy"
+                 onerror="this.onerror=null;this.src='${FALLBACK}'">
+            ${product.badge ? `<div class="product-badge">${product.badge}</div>` : ''}
+          </div>
+          <div class="product-info">
+            <div class="product-category">${categoryLabel[product.category] || product.category}</div>
+            <div class="product-title">${product.name}</div>
+            <div class="product-description">${product.description}</div>
+            <div class="product-price-row">
+              <div class="product-price">₹${product.price.toLocaleString()}</div>
+              <div class="product-rating">
+                <i class="fas fa-star"></i>
+                <span>${product.rating}</span>
+              </div>
+            </div>
+            <button class="add-to-cart" onclick="addToCart(${product.id}, '${product.name.replace(/'/g, "\\'")}')">
+              <i class="fas fa-shopping-cart"></i> Add to Cart
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    categoryFilter.addEventListener('change', renderProducts);
+    sortFilter.addEventListener('change', renderProducts);
+    searchInput.addEventListener('input', renderProducts);
+    searchBtn.addEventListener('click', renderProducts);
+
+    document.getElementById('cartIcon').addEventListener('click', () => {
+      let cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+      if (cartItems.length === 0) {
+        alert("Your cart is empty! Add some cricket gear to get started.");
+      } else {
+        alert(`🛒 You have ${cartItems.length} item(s) in your cart.\nTotal items: ${cartCount}\n\nVisit checkout to complete your purchase!`);
+      }
+    });
+
+    updateCartDisplay();
+    renderProducts();
+  </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Cricket Room | Register</title>
+  <link rel="stylesheet" href="/style.css" type="text/css">
+</head>
+<body>
+  <div class="container">
+    <h2>Create Account</h2>
+    <div class="subtitle">Join us today! Fill in your details below.</div>
+    
+    <form id="registrationForm" onsubmit="handleRegistration(event)">
+      <!-- Full Name -->
+      <div class="form-group">
+        <label for="fullname">Full Name <span class="required">*</span></label>
+        <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
+      </div>
+      
+      <!-- Date of Birth -->
+      <div class="form-group">
+        <label for="dob">Date of Birth <span class="required">*</span></label>
+        <input type="date" id="dob" name="dob" required>
+      </div>
+      
+      <!-- Email Address -->
+      <div class="form-group">
+        <label for="email">Email Address <span class="required">*</span></label>
+        <input type="email" id="email" name="email" placeholder="example@domain.com" required>
+      </div>
+      
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Username <span class="required">*</span></label>
+        <input type="text" id="username" name="username" placeholder="Choose a username" required>
+      </div>
+      
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password <span class="required">*</span></label>
+        <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+        <small style="color: #777; font-size: 12px;">Minimum 6 characters</small>
+      </div>
+      
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+      </div>
+      
+      <!-- Optional: Gender (Dropdown) -->
+      <div class="form-group">
+        <label for="gender">Gender (Optional)</label>
+        <select id="gender" name="gender">
+          <option value="">Prefer not to say</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      
+      <!-- Register Button -->
+      <button type="submit">Register Now</button>
+      
+      <!-- Message Area for feedback -->
+      <div id="messageArea" class="message-area"></div>
+      
+      <!-- Link to Login Page -->
+      <div class="login-link">
+        Already have an account? <a href="login.html">Sign in here</a>
+      </div>
+      <hr>
+      <div style="text-align: center; font-size: 12px; color: #999; margin-top: 15px;">
+        By registering, you agree to our Terms of Service
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function handleRegistration(event) {
+      event.preventDefault();
+      
+      // Get all form values
+      const fullname = document.getElementById('fullname').value.trim();
+      const dob = document.getElementById('dob').value;
+      const email = document.getElementById('email').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const gender = document.getElementById('gender').value;
+      const messageArea = document.getElementById('messageArea');
+      
+      // Clear previous message classes
+      messageArea.className = 'message-area';
+      messageArea.style.display = 'none';
+      
+      // Validation 1: Check if all required fields are filled 
+      if (!fullname || !dob || !email || !username || !password || !confirmPassword) {
+        showMessage('Please fill in all required fields.', 'error');
+        return;
+      }
+      
+      // Validation 2: Email format 
+      const emailPattern = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        showMessage('Please enter a valid email address (e.g., name@domain.com).', 'error');
+        return;
+      }
+      
+      // Validation 3: Password length (minimum 6 characters)
+      if (password.length < 6) {
+        showMessage('Password must be at least 6 characters long.', 'error');
+        return;
+      }
+      
+      // Validation 4: Password and Confirm Password match
+      if (password !== confirmPassword) {
+        showMessage('Passwords do not match. Please re-enter.', 'error');
+        return;
+      }
+      
+      // Validation 5: Username should not contain spaces (optional)
+      if (username.includes(' ')) {
+        showMessage('Username cannot contain spaces.', 'error');
+        return;
+      }
+      
+      // Validation 6: Check if username is at least 3 characters
+      if (username.length < 3) {
+        showMessage('Username must be at least 3 characters long.', 'error');
+        return;
+      }
+      
+      // Date of Birth validation: user must be at least 13 years old 
+      const birthDate = new Date(dob);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      if (age < 13) {
+        showMessage('You must be at least 13 years old to register.', 'error');
+        return;
+      }
+      if (age > 120) {
+        showMessage('Please enter a valid date of birth.', 'error');
+        return;
+      }
+      
+      // If all validations pass, simulate successful registration
+      const userData = {
+        fullName: fullname,
+        dateOfBirth: dob,
+        email: email,
+        username: username,
+        gender: gender || 'Not specified',
+        registeredAt: new Date().toISOString()
+      };
+      
+      // Store in localStorage
+      // Check if username or email already exists
+      const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+      const usernameExists = existingUsers.some(user => user.username === username);
+      const emailExists = existingUsers.some(user => user.email === email);
+      
+      if (usernameExists) {
+        showMessage('Username already taken. Please choose another username.', 'error');
+        return;
+      }
+      if (emailExists) {
+        showMessage('Email already registered. Please use a different email or login.', 'error');
+        return;
+      }
+      
+
+      userData.password = password;
+      existingUsers.push(userData);
+      localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
+      
+      // Show success message
+      showMessage(`Registration successful! Welcome, ${username}! Redirecting to login...`, 'success');
+      
+      // Clear form for security
+      document.getElementById('registrationForm').reset();
+      
+      // Redirect to login page after 2 seconds
+      setTimeout(() => {
+        
+        alert(`Registration complete!\nYou can now log in with username: ${username}`);
+        window.location.href = 'login.html';
+        
+        messageArea.style.display = 'none';
+      }, 2000);
+    }
+    
+    function showMessage(msg, type) {
+      const messageArea = document.getElementById('messageArea');
+      messageArea.textContent = msg;
+      messageArea.className = 'message-area ' + type;
+      messageArea.style.display = 'block';
+      
+      messageArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      
+      if (type === 'error') {
+        setTimeout(() => {
+          if (messageArea.className.includes('error')) {
+            messageArea.style.display = 'none';
+          }
+        }, 4000);
+      }
+    }
+    
+    const passwordInput = document.getElementById('password');
+    const confirmInput = document.getElementById('confirmPassword');
+    const messageArea = document.getElementById('messageArea');
+    
+    function addRealtimeValidation() {
+      confirmInput.addEventListener('input', function() {
+        if (passwordInput.value !== confirmInput.value && confirmInput.value.length > 0) {
+          confirmInput.style.borderColor = '#e74c3c';
+        } else {
+          confirmInput.style.borderColor = '#ddd';
+        }
+      });
+      passwordInput.addEventListener('input', function() {
+        if (confirmInput.value.length > 0 && passwordInput.value !== confirmInput.value) {
+          confirmInput.style.borderColor = '#e74c3c';
+        } else if (confirmInput.value.length > 0 && passwordInput.value === confirmInput.value) {
+          confirmInput.style.borderColor = '#2ecc71';
+        } else {
+          confirmInput.style.borderColor = '#ddd';
+        }
+      });
+    }
+    addRealtimeValidation();
+    
+    // Add extra live validation for username spaces
+    const usernameField = document.getElementById('username');
+    usernameField.addEventListener('input', function(e) {
+      if (this.value.includes(' ')) {
+        this.setCustomValidity('Username cannot contain spaces');
+      } else {
+        this.setCustomValidity('');
+      }
+    });
+  </script>
+</body>
+</html>

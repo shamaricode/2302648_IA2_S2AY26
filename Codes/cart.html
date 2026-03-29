@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Cricket Room | Shopping Cart</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/style.css" type="text/css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="nav-container">
+      <div class="logo">
+        <h1>The Cricket Room</h1>
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="aboutUs.html" class="active">About Us</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+        <a href="cart.html">Cart</a>
+        <a href="checkout.html">Checkout</a>
+        <div class="cart-icon" id="cartIcon">
+          Cart <span id="cartCount">0</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1> Your Shopping Cart</h1>
+    <p>Review your items, apply discount codes, and proceed to checkout</p>
+  </div>
+
+  <!-- Cart Container -->
+  <div class="cart-container" id="cartContainer">
+    <!-- Cart Items will be dynamically inserted here -->
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>The Cricket Room — Fueling every cricketer's dream since 2024</p>
+    <p style="margin-top: 0.8rem; font-size: 0.85rem;"> Ship all over India | 24/7 Support | #PlayWithPride</p>
+    <p style="margin-top: 1rem; font-size: 0.75rem;">© 2025 The Cricket Room. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // ============================================
+    // SHOPPING CART FUNCTIONALITY
+    // ============================================
+    
+    // Sample product database (matching products page)
+    const productsDatabase = {
+      1: { name: "SG Players Edition Bat", price: 5499, image: "https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=80&h=80&fit=crop", category: "bat" },
+      2: { name: "ProTech Air Helmet", price: 2999, image: "https://images.unsplash.com/photo-1628779238951-be2c9f258a1e?w=80&h=80&fit=crop", category: "protective" },
+      3: { name: "Asics Strike 360 Shoes", price: 3899, image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=80&h=80&fit=crop", category: "footwear" },
+      4: { name: "Kookaburra Turf Ball", price: 899, image: "https://images.unsplash.com/photo-1600679472829-3044539ce8ed?w=80&h=80&fit=crop", category: "accessories" },
+      5: { name: "SS Pro Batting Pads", price: 2199, image: "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=80&h=80&fit=crop", category: "protective" },
+      6: { name: "GM Original Gloves", price: 1799, image: "https://images.unsplash.com/photo-1625772452859-1c03d5bf1137?w=80&h=80&fit=crop", category: "protective" },
+      7: { name: "Wheelie Cricket Duffel Bag", price: 3499, image: "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=80&h=80&fit=crop", category: "accessories" },
+      8: { name: "Elite Performance Jersey", price: 1599, image: "https://images.unsplash.com/photo-1587387119725-9c6c0faf0a91?w=80&h=80&fit=crop", category: "apparel" }
+    };
+    
+    // Cart state
+    let cart = [];
+    let appliedDiscount = 0;
+    let discountCode = "";
+    const TAX_RATE = 0.15; // 15% tax
+    const VALID_DISCOUNTS = {
+      "CRICKET10": 10,
+      "WELCOME20": 20,
+      "THEBAT15": 15,
+      "FREESHIP": 5
+    };
+    
+    // Load cart from localStorage
+    function loadCart() {
+      const savedCart = localStorage.getItem('cartItems');
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+        // Group items by ID and sum quantities
+        const groupedCart = {};
+        parsedCart.forEach(item => {
+          if (groupedCart[item.id]) {
+            groupedCart[item.id].quantity++;
+          } else {
+            groupedCart[item.id] = {
+              id: item.id,
+              name: productsDatabase[item.id]?.name || item.name,
+              price: productsDatabase[item.id]?.price || 0,
+              image: productsDatabase[item.id]?.image || "",
+              quantity: 1
+            };
+          }
+        });
+        cart = Object.values(groupedCart);
+      } else {
+        // Demo cart items for preview
+        cart = [
+          { id: 1, name: "SG Players Edition Bat", price: 5499, image: "https://images.unsplash.com/photo-1566577739112-5180d4bf9390?w=80&h=80&fit=crop", quantity: 1 },
+          { id: 2, name: "ProTech Air Helmet", price: 2999, image: "https://images.unsplash.com/photo-1628779238951-be2c9f258a1e?w=80&h=80&fit=crop", quantity: 2 },
+          { id: 4, name: "Kookaburra Turf Ball", price: 899, image: "https://images.unsplash.com/photo-1600679472829-3044539ce8ed?w=80&h=80&fit=crop", quantity: 3 }
+        ];
+      }
+      updateCartCount();
+    }
+    
+    // Save cart to localStorage
+    function saveCart() {
+      const flatCart = [];
+      cart.forEach(item => {
+        for (let i = 0; i < item.quantity; i++) {
+          flatCart.push({ id: item.id, name: item.name });
+        }
+      });
+      localStorage.setItem('cartItems', JSON.stringify(flatCart));
+      updateCartCount();
+    }
+    
+    // Update cart count in header
+    function updateCartCount() {
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const cartCountSpan = document.getElementById('cartCount');
+      if (cartCountSpan) {
+        cartCountSpan.textContent = totalItems;
+      }
+      localStorage.setItem('cartCount', totalItems);
+    }
+    
+    // Calculate subtotal
+    function calculateSubtotal() {
+      return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    }
+    
+    // Calculate discount amount
+    function calculateDiscountAmount(subtotal) {
+      return (subtotal * appliedDiscount) / 100;
+    }
+    
+    // Calculate tax
+    function calculateTax(subtotal, discountAmount) {
+      return (subtotal - discountAmount) * TAX_RATE;
+    }
+    
+    // Calculate total
+    function calculateTotal(subtotal, discountAmount, tax) {
+      return subtotal - discountAmount + tax;
+    }
+    
+    // Render cart
+    function renderCart() {
+      const cartContainer = document.getElementById('cartContainer');
+      const subtotal = calculateSubtotal();
+      const discountAmount = calculateDiscountAmount(subtotal);
+      const tax = calculateTax(subtotal, discountAmount);
+      const total = calculateTotal(subtotal, discountAmount, tax);
+      
+      if (cart.length === 0) {
+        cartContainer.innerHTML = `
+          <div class="empty-cart" style="grid-column: 1/-1; background: white; border-radius: 20px; padding: 4rem;">
+            <i class="fas fa-shopping-cart"></i>
+            <h3>Your cart is empty</h3>
+            <p>Looks like you haven't added any cricket gear yet!</p>
+            <a href="products.html" class="shop-now-btn">Browse Products</a>
+          </div>
+        `;
+        return;
+      }
+      
+      cartContainer.innerHTML = `
+        <div class="cart-items-section">
+          <div class="cart-header">
+            <span>Product</span>
+            <span>Price</span>
+            <span>Quantity</span>
+            <span>Total</span>
+            <span></span>
+          </div>
+          <div id="cartItemsList">
+            ${cart.map(item => `
+              <div class="cart-item" data-id="${item.id}">
+                <div class="product-info">
+                  <img class="product-image" src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80?text=Cricket'">
+                  <div class="product-details">
+                    <h3>${item.name}</h3>
+                    <p>Premium Cricket Gear</p>
+                  </div>
+                </div>
+                <div class="product-price">₹${item.price.toLocaleString()}</div>
+                <div class="quantity-control">
+                  <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                  <input type="number" class="quantity-input" value="${item.quantity}" min="1" max="99" onchange="updateQuantity(${item.id}, parseInt(this.value))">
+                  <button class="quantity-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                </div>
+                <div class="item-total">₹${(item.price * item.quantity).toLocaleString()}</div>
+                <button class="remove-item" onclick="removeItem(${item.id})">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        
+        <div class="cart-summary">
+          <h2>Order Summary</h2>
+          <div class="summary-row">
+            <span>Subtotal (${cart.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
+            <span>₹${subtotal.toLocaleString()}</span>
+          </div>
+          <div class="discount-code">
+            <input type="text" id="discountInput" placeholder="Enter discount code" value="${discountCode}">
+            <button class="apply-btn" onclick="applyDiscount()">Apply</button>
+          </div>
+          ${appliedDiscount > 0 ? `
+            <div class="summary-row discount">
+              <span>Discount (${appliedDiscount}% off)</span>
+              <span>- ₹${discountAmount.toLocaleString()}</span>
+            </div>
+          ` : ''}
+          <div class="summary-row">
+            <span>Tax (${TAX_RATE * 100}% GST)</span>
+            <span>₹${tax.toLocaleString()}</span>
+          </div>
+          <div class="summary-row total">
+            <span><strong>Total Amount</strong></span>
+            <span><strong>₹${total.toLocaleString()}</strong></span>
+          </div>
+          ${appliedDiscount > 0 ? `<div style="font-size: 0.75rem; color: #10b981; text-align: center; margin-top: 0.5rem;">
+            <i class="fas fa-tag"></i> Code "${discountCode}" applied!
+          </div>` : ''}
+          <button class="checkout-btn" onclick="checkout()">
+            <i class="fas fa-credit-card"></i> Proceed to Checkout
+          </button>
+          <a href="products.html" class="continue-shopping">
+            <i class="fas fa-arrow-left"></i> Continue Shopping
+          </a>
+        </div>
+      `;
+    }
+    
+    // Update quantity
+    function updateQuantity(productId, newQuantity) {
+      if (newQuantity < 1) {
+        removeItem(productId);
+        return;
+      }
+      if (newQuantity > 99) newQuantity = 99;
+      
+      const item = cart.find(i => i.id === productId);
+      if (item) {
+        item.quantity = newQuantity;
+        saveCart();
+        renderCart();
+      }
+    }
+    
+    // Remove item
+    function removeItem(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      saveCart();
+      renderCart();
+    }
+    
+    // Apply discount
+    function applyDiscount() {
+      const input = document.getElementById('discountInput');
+      const code = input.value.trim().toUpperCase();
+      
+      if (VALID_DISCOUNTS[code]) {
+        appliedDiscount = VALID_DISCOUNTS[code];
+        discountCode = code;
+        showNotification(`Discount applied! ${appliedDiscount}% off your order`, 'success');
+      } else if (code === "") {
+        appliedDiscount = 0;
+        discountCode = "";
+        showNotification('Discount code removed', 'info');
+      } else {
+        showNotification('Invalid discount code. Try: CRICKET10, WELCOME20, THEBAT15, or FREESHIP', 'error');
+        return;
+      }
+      renderCart();
+    }
+    
+    // Checkout
+    function checkout() {
+      if (cart.length === 0) {
+        showNotification('Your cart is empty! Add some items first.', 'error');
+        return;
+      }
+      
+      const subtotal = calculateSubtotal();
+      const discountAmount = calculateDiscountAmount(subtotal);
+      const tax = calculateTax(subtotal, discountAmount);
+      const total = calculateTotal(subtotal, discountAmount, tax);
+      
+      const orderDetails = cart.map(item => 
+        `${item.name} x${item.quantity} - ₹${(item.price * item.quantity).toLocaleString()}`
+      ).join('\n');
+      
+      alert(`🎉 Order Summary\n\n${orderDetails}\n\n━━━━━━━━━━━━━━━━━━\nSubtotal: ₹${subtotal.toLocaleString()}\nDiscount: -₹${discountAmount.toLocaleString()}\nTax (15%): ₹${tax.toLocaleString()}\n━━━━━━━━━━━━━━━━━━\nTotal: ₹${total.toLocaleString()}\n\nThank you for shopping at The Cricket Room! 🏏`);
+      
+      // Clear cart after checkout
+      cart = [];
+      appliedDiscount = 0;
+      discountCode = "";
+      saveCart();
+      renderCart();
+      showNotification('Order placed successfully! Thank you for shopping with us.', 'success');
+    }
+    
+    // Show notification
+    function showNotification(message, type) {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#1a472a' : type === 'error' ? '#dc2626' : '#2563eb'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      `;
+      notification.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i> ${message}`;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
+    }
+    
+    // Add slide-in animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Initialize cart
+    loadCart();
+    renderCart();
+    
+    // Cart icon click handler
+    document.getElementById('cartIcon').addEventListener('click', () => {
+      renderCart();
+    });
+  </script>
+</body>
+</html>
